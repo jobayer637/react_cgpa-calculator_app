@@ -358,7 +358,7 @@ class CGPA extends Component {
 
             <Card className="rounded-0">
                 <CardHeader className="text-center py-4">
-                    <small>Designed and Developed by Jobayer Hossain &copy; <mark>react js</mark> {Date()}</small>
+                    <small>Designed and Developed by Jobayer Hossain &copy; <mark>BUBT</mark> &copy; <mark>React js</mark> &copy; {Date()}</small>
                 </CardHeader>
             </Card>
         </>
