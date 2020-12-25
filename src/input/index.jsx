@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import {
-    Card, CardBody,
+    Card, CardBody, Table,
     Modal, ModalHeader, ModalBody, ModalFooter, Button,
-    Form, FormGroup, Input, InputGroup, Label
+    Form, FormGroup, Input, InputGroup, Label, ButtonGroup, Badge, CardFooter
 } from 'reactstrap';
 import swal from 'sweetalert';
 
@@ -61,9 +61,17 @@ class UserInput extends Component {
             sgpa: 0,
             subject: this.state.subjects
         }
+
+        if (!newSemester.name) {
+            swal("Opps!", "Please Enter Semester Name", "info");
+            return;
+        }
+
         this.props.addNewSemester(newSemester)
         this.setState({
-            semesters: this.state.semesters.concat(newSemester)
+            semesters: this.state.semesters.concat(newSemester),
+            subjects: [],
+            subDada: { name: '', grade: '', credit: '' }
         }, () => {
             this.props.modalHandle()
             swal({
@@ -72,7 +80,7 @@ class UserInput extends Component {
                 icon: "success",
                 button: "Close",
             });
-            
+
         })
     }
 
@@ -80,6 +88,8 @@ class UserInput extends Component {
     render() {
         const { isOpen, modalHandle } = this.props
         const { name } = this.state.subDada
+        let totalCredits = 0
+        let totalPoints = 0
         return <>
             <Modal size="lg" isOpen={isOpen}>
 
@@ -124,6 +134,42 @@ class UserInput extends Component {
                                 </FormGroup>
                             </Form>
                         </CardBody>
+
+                        <CardBody>
+                            <Table dark>
+                                <thead>
+                                    <tr>
+                                        <th>Serial</th>
+                                        <th>Course Name</th>
+                                        <th>Course Grade</th>
+                                        <th>Course Credit</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {this.state.subjects.map((sub, i) => {
+                                        totalPoints = parseFloat(totalPoints) + ((parseFloat(sub.credit)) * parseFloat(sub.grade === 'A+' ? 4 : sub.grade === "A" ? 3.75 : sub.grade === "A-" ? 3.50 : sub.grade === "B+" ? 3.25 : sub.grade === "B" ? 3.00 : sub.grade === "B-" ? 2.75 : sub.grade === "C+" ? 2.50 : sub.grade === "C" ? 2.25 : sub.grade === "D" ? 2 : 0))
+                                        totalCredits = parseFloat(totalCredits) + parseFloat(sub.credit)
+                                        return <tr>
+                                            <th>{i + 1}</th>
+                                            <td>{sub.name}</td>
+                                            <td>{sub.grade}</td>
+                                            <td>{sub.credit}</td>
+                                        </tr>
+                                    })}
+                                </tbody>
+                            </Table>
+                        </CardBody>
+                        <CardFooter>
+                            <ButtonGroup className="d-flex justify-content-between">
+                                <div>
+                                    <Badge color="info" className="rounded-0 mx-2">Total Points {totalPoints}</Badge>
+                                    <Badge color="info" className="rounded-0 mx-2">Total Credits {totalCredits}</Badge>
+                                </div>
+                                <div>
+                                    <Badge color="info" className="rounded-0 mx-2">SGPA {(totalPoints / totalCredits).toPrecision(3)}</Badge>
+                                </div>
+                            </ButtonGroup>
+                        </CardFooter>
                     </Card>
                 </ModalBody>
                 <ModalFooter>

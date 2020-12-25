@@ -86,7 +86,8 @@ class CGPA extends Component {
                             grade === "B-" ? 2.75 :
                                 grade === "C+" ? 2.50 :
                                     grade === "C" ? 2.25 :
-                                        grade === "D" ? 2 : 0
+                                        grade === "D" ? 2 :
+                                            grade === "F" ? 0 : 0
     }
 
     modalHandle = () => {
