@@ -8,19 +8,6 @@ import {
 
 
 const View = ({ semesters, deleteSemester, cedit, gedit, search, red, blue, green }) => {
-
-    // let [red, setRed] = useState(Math.floor(Math.random() * 200))
-    // let [green, setGreen] = useState(Math.floor(Math.random() * 200))
-    // let [blue, setBlue] = useState(Math.floor(Math.random() * 200))
-
-    // setInterval(() => {
-    //     setRed(Math.floor(Math.random() * 200))
-    //     setGreen(Math.floor(Math.random() * 200))
-    //     setBlue(Math.floor(Math.random() * 000))
-    // }, 100000);
-
-
-
     let totalPoints = 0
     let totalCredits = 0
     return <>
