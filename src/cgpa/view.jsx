@@ -1,19 +1,21 @@
 import {
-    Card, CardBody, CardHeader, CardFooter, ButtonGroup, Table, Badge,
+    Card, CardBody, CardHeader, CardFooter, ButtonGroup, Table, Badge, Button
 } from 'reactstrap';
 
-const View = ({ subjects }) => {
+
+const View = ({ semesters, deleteSemester, cedit, gedit }) => {
     let totalPoints = 0
     let totalCredits = 0
     return <>
-        {subjects.map(sub => {
-            totalPoints = parseFloat(totalPoints) + parseFloat(sub.cg_po)
-            totalCredits = parseFloat(totalCredits) + parseFloat(sub.credits)
+        {semesters.map(subject => {
+            totalPoints = parseFloat(totalPoints) + parseFloat(subject.cg_po)
+            totalCredits = parseFloat(totalCredits) + parseFloat(subject.credits)
 
             return <Card className="my-2 rounded-0">
                 <CardHeader>
 
-                    <h3>{sub.name}</h3>
+                    <h3>{subject.name}</h3>
+                    <Button onClick={() => deleteSemester(subject.id)}>Action</Button>
                 </CardHeader>
                 <CardBody>
 
@@ -29,12 +31,12 @@ const View = ({ subjects }) => {
                         </thead>
 
                         <tbody>
-                            {sub.subject.map((sub, i) => {
+                            {subject.subject.map((sub, i) => {
                                 return <tr>
                                     <th>{i + 1}</th>
                                     <th>{sub.name}</th>
-                                    <th>{sub.grade}</th>
-                                    <th>{sub.credit}</th>
+                                    <th onClick={() => gedit(subject.id, i, sub.grade)}>{sub.grade}</th>
+                                    <th onClick={() => cedit(subject.id, i, sub.credit)}>{sub.credit}</th>
                                     <th>
                                         {sub.grade === 'A+' ? 4 :
                                             sub.grade === "A" ? 3.75 :
@@ -55,16 +57,16 @@ const View = ({ subjects }) => {
                 <CardFooter>
                     <ButtonGroup className='d-flex justify-content-between'>
                         <div>
-                            <Badge color="danger" className="mx-2">points: {sub.points}</Badge>
-                            <Badge color="danger" className="mx-2">credits: {sub.credits}</Badge>
-                            <Badge color="danger" className="mx-2">credits x points: {sub.cg_po}</Badge>
+                            <Badge color="danger" className="mx-2">points: {subject.points}</Badge>
+                            <Badge color="danger" className="mx-2">credits: {subject.credits}</Badge>
+                            <Badge color="danger" className="mx-2">credits x points: {subject.cg_po}</Badge>
 
                             <Badge color="danger" className="mx-2">Total Points {totalPoints}</Badge>
                             <Badge color="danger" className="mx-2">completed credits {totalCredits}</Badge>
 
                         </div>
 
-                        <div> <Badge color="warning" className="mx-2">SGPA: {(sub.cg_po / sub.credits).toPrecision(3)}</Badge>
+                        <div> <Badge color="warning" className="mx-2">SGPA: {(subject.cg_po / subject.credits).toPrecision(3)}</Badge>
                             <Badge color="warning" className="mx-2">CGPA: {(totalPoints / totalCredits).toPrecision(3)}</Badge>
                         </div>
                     </ButtonGroup>

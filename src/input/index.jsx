@@ -107,8 +107,8 @@ class UserInput extends Component {
                             <Form onSubmit={this.handleFormSubmit}>
                                 <FormGroup>
                                     <InputGroup>
-                                        <Input value={name} name="name" onChange={this.handleInput} placeholder="Subject Name" ></Input>
-                                        <Input name="grade" onChange={this.handleInput} type="select" id="exampleSelect">
+                                        <Input required value={name} name="name" onChange={this.handleInput} placeholder="Subject Name" ></Input>
+                                        <Input required name="grade" onChange={this.handleInput} type="select" id="exampleSelect">
                                             <option value="">Grade</option>
                                             <option value="A+">A+</option>
                                             <option value="A">A</option>
@@ -121,7 +121,7 @@ class UserInput extends Component {
                                             <option value="D">D</option>
                                             <option value="F">F</option>
                                         </Input>
-                                        <Input name="credit" onChange={this.handleInput} type="select" id="exampleSelect">
+                                        <Input required name="credit" onChange={this.handleInput} type="select" id="exampleSelect">
                                             <option value="">Credit</option>
                                             <option value="4">4</option>
                                             <option value="3">3</option>
@@ -136,7 +136,7 @@ class UserInput extends Component {
                         </CardBody>
 
                         <CardBody>
-                            <Table dark>
+                            <Table dark hover>
                                 <thead>
                                     <tr>
                                         <th>Serial</th>
@@ -147,7 +147,7 @@ class UserInput extends Component {
                                 </thead>
                                 <tbody>
                                     {this.state.subjects.map((sub, i) => {
-                                        totalPoints = parseFloat(totalPoints) + ((parseFloat(sub.credit)) * parseFloat(sub.grade === 'A+' ? 4 : sub.grade === "A" ? 3.75 : sub.grade === "A-" ? 3.50 : sub.grade === "B+" ? 3.25 : sub.grade === "B" ? 3.00 : sub.grade === "B-" ? 2.75 : sub.grade === "C+" ? 2.50 : sub.grade === "C" ? 2.25 : sub.grade === "D" ? 2 : 0))
+                                        totalPoints = parseFloat(totalPoints) + ((parseFloat(sub.credit)) * parseFloat(sub.grade === 'A+' ? 4 : sub.grade === "A" ? 3.75 : sub.grade === "A-" ? 3.50 : sub.grade === "B+" ? 3.25 : sub.grade === "B" ? 3.00 : sub.grade === "B-" ? 2.75 : sub.grade === "C+" ? 2.50 : sub.grade === "C" ? 2.25 : sub.grade === "D" ? 2 : sub.grade === "F" ? 0 : 0))
                                         totalCredits = parseFloat(totalCredits) + parseFloat(sub.credit)
                                         return <tr>
                                             <th>{i + 1}</th>

@@ -1,20 +1,21 @@
 import React, { Component } from 'react'
 import sid from "short-id";
 import {
-    Card, CardHeader, Button,
+    Card, CardHeader, Button, Modal, Input, ModalBody, InputGroup, Form,
 
 } from 'reactstrap';
 
 import demoSubjects from '../demo/semesters'
 import View from './view'
 import UserInput from '../input/index'
+import swal from 'sweetalert';
 
 class CGPA extends Component {
 
     state = {
         userId: 1,
         demoData: demoSubjects,
-        subjects: [],
+        semesters: [],
         isOpen: false,
         dx: [
             {
@@ -22,16 +23,22 @@ class CGPA extends Component {
                 grade: '',
                 credit: ''
             }
-        ]
+        ],
+
+        gradeModalIsOpen: false,
+        gradeEditValue: '',
+        semesterId: '',
+        subjectIdex: '',
+        updateStatus: ''
     }
 
     componentDidMount = () => {
-        const subjects = []
+        const semester = []
         this.state.demoData.map(sub => {
-            subjects.push(this.convertReatData(sub))
+            semester.push(this.convertReatData(sub))
         })
         this.setState({
-            subjects: this.state.subjects.concat(subjects)
+            semesters: this.state.semesters.concat(semester)
         }, () => {
             //console.log(this.state.subjects)
         })
@@ -69,11 +76,11 @@ class CGPA extends Component {
     }
 
     addNewSemester = (newSem) => {
-        let s = this.convertReatData(newSem)
+        let semester = this.convertReatData(newSem)
         this.setState({
-            subjects: this.state.subjects.concat(s)
+            semesters: this.state.semesters.concat(semester)
         }, () => {
-            console.log(this.state.subjects)
+            console.log(this.state.semesters)
         })
     }
 
@@ -96,10 +103,112 @@ class CGPA extends Component {
         })
     }
 
+    deleteSemester = (id) => {
+        let semesters = [...this.state.semesters]
+        let index = semesters.find(sem => sem.id === id)
+        semesters.splice(index, 1)
+        this.setState({
+            semesters
+        })
+    }
+
+    gedit = (sem_id, sub_index, sub_grade) => {
+        this.setState({
+            gradeModalIsOpen: !this.state.gradeModalIsOpen,
+            gradeEditValue: sub_grade,
+            semesterId: sem_id,
+            subjectIdex: sub_index,
+            updateStatus: 'g'
+        })
+    }
+
+    cedit = (sem_id, sub_index, sub_credit) => {
+        this.setState({
+            gradeModalIsOpen: !this.state.gradeModalIsOpen,
+            gradeEditValue: sub_credit,
+            semesterId: sem_id,
+            subjectIdex: sub_index,
+            updateStatus: 'c'
+        })
+    }
+
+    updateGrade = event => {
+        this.setState({
+            gradeEditValue: event.target.value
+        }, () => {
+            //
+        })
+    }
+
+    handleGradeUpdate = (event) => {
+        event.preventDefault()
+        const semesters = [...this.state.semesters]
+        let semester = semesters.find(sub => sub.id === this.state.semesterId)
+
+        if (this.state.updateStatus === 'g') {
+            semester.subject[this.state.subjectIdex].grade = this.state.gradeEditValue
+            let points = 0
+            let cg_po = 0
+            semester.subject.map(sub => {
+                points = parseFloat(points) + parseFloat(this.convertGrageToPoint(sub.grade))
+                cg_po += parseFloat(sub.credit) * parseFloat(this.convertGrageToPoint(sub.grade))
+            })
+            semester.points = points
+            semester.cg_po = cg_po
+        }
+
+        if (this.state.updateStatus === 'c') {
+            semester.subject[this.state.subjectIdex].credit = this.state.gradeEditValue
+            let credits = 0
+            let cg_po = 0
+            let points = 0
+            semester.subject.map(sub => {
+                points = parseFloat(points) + parseFloat(this.convertGrageToPoint(sub.grade))
+                credits = parseFloat(credits) + parseFloat(sub.credit)
+                cg_po += parseFloat(sub.credit) * parseFloat(this.convertGrageToPoint(sub.grade))
+            })
+            semester.credits = credits
+            semester.points = points
+            semester.cg_po = cg_po
+        }
+
+        this.setState({
+            semesters: semesters
+        }, () => {
+            swal({
+                title: "Good job!",
+                text: "Successcully Updated",
+                icon: "success",
+                button: "Close",
+            });
+            this.setState({
+                gradeModalIsOpen: !this.state.gradeModalIsOpen,
+                gradeEditValue: '',
+                semesterId: '',
+                subjectIdex: '',
+                updateStatus: ''
+            })
+            console.log(this.state.semesters)
+        })
+    }
+
     render() {
-        const { isOpen, subjects } = this.state
+        const { isOpen, semesters } = this.state
 
         return <>
+
+            <Modal isOpen={this.state.gradeModalIsOpen}>
+                <ModalBody>
+                    <Form onSubmit={this.handleGradeUpdate}>
+                        <InputGroup>
+                            <Input required onChange={this.updateGrade} className="rounded-0" type="text" value={this.state.gradeEditValue}></Input>
+                            <Button type="submit" className="rounded-0 btn-success">updae</Button>
+                            <Button className="rounded-0 btn-warning" onClick={() => this.setState({ gradeModalIsOpen: !this.state.gradeModalIsOpen })}>cancel</Button>
+                        </InputGroup>
+                    </Form>
+                </ModalBody>
+            </Modal>
+
             <Card>
                 <CardHeader className="text-center">
 
@@ -120,7 +229,10 @@ class CGPA extends Component {
 
             {/* view part */}
             <View
-                subjects={subjects}
+                semesters={semesters}
+                deleteSemester={this.deleteSemester}
+                cedit={this.cedit}
+                gedit={this.gedit}
             />
 
             <Card className="rounded-0">
