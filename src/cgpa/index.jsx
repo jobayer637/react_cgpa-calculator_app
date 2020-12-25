@@ -142,11 +142,39 @@ class CGPA extends Component {
 
     handleGradeUpdate = (event) => {
         event.preventDefault()
+        const gChaar = ['A+', 'A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'D', 'F'];
+        const cChar = ['4', '3', '2.5', '2', '1.5', '1', '0.75']
+
+        if (this.state.updateStatus === 'g') {
+            if (!gChaar.includes(this.state.gradeEditValue.toUpperCase())) {
+                swal({
+                    title: "Oopps!",
+                    text: "Please Enter Valid Grade Between ['A+', 'A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'D', 'F']",
+                    icon: "warning",
+                    button: "Close",
+                });
+                return
+            }
+        }
+
+        if (this.state.updateStatus === 'c') {
+            if (!gChaar.includes(this.state.gradeEditValue.toString())) {
+                swal({
+                    title: "Oopps!",
+                    text: "Please Enter Valid Credit Between ['4', '3', '2.5','2', '1.5', '1', '0.75']",
+                    icon: "warning",
+                    button: "Close",
+                });
+
+                return
+            }
+        }
+
         const semesters = [...this.state.semesters]
         let semester = semesters.find(sub => sub.id === this.state.semesterId)
 
         if (this.state.updateStatus === 'g') {
-            semester.subject[this.state.subjectIdex].grade = this.state.gradeEditValue
+            semester.subject[this.state.subjectIdex].grade = this.state.gradeEditValue.toUpperCase()
             let points = 0
             let cg_po = 0
             semester.subject.map(sub => {
@@ -188,7 +216,7 @@ class CGPA extends Component {
                 subjectIdex: '',
                 updateStatus: ''
             })
-            console.log(this.state.semesters)
+            //console.log(this.state.semesters)
         })
     }
 
