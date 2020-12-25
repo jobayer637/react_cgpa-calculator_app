@@ -31,7 +31,13 @@ class CGPA extends Component {
         subjectIdex: '',
         updateStatus: '',
 
-        search: '', 
+        search: '',
+        rgb: {
+            red: 200,
+            green: 200,
+            blue: 200
+        }
+
     }
 
     componentDidMount = () => {
@@ -42,7 +48,13 @@ class CGPA extends Component {
         this.setState({
             semesters: this.state.semesters.concat(semester)
         }, () => {
-            //console.log(this.state.subjects)
+            this.setState({
+                rgb: {
+                    red: Math.floor(Math.random() * 200),
+                    blue: Math.floor(Math.random() * 200),
+                    green: Math.floor(Math.random() * 200)
+                }
+            })
         })
     }
 
@@ -82,7 +94,13 @@ class CGPA extends Component {
         this.setState({
             semesters: this.state.semesters.concat(semester)
         }, () => {
-            console.log(this.state.semesters)
+            this.setState({
+                rgb: {
+                    red: Math.floor(Math.random() * 200),
+                    blue: Math.floor(Math.random() * 200),
+                    green: Math.floor(Math.random() * 200)
+                }
+            })
         })
     }
 
@@ -93,6 +111,14 @@ class CGPA extends Component {
     modalHandle = () => {
         this.setState({
             isOpen: !this.state.isOpen
+        }, () => {
+            this.setState({
+                rgb: {
+                    red: Math.floor(Math.random() * 200),
+                    blue: Math.floor(Math.random() * 200),
+                    green: Math.floor(Math.random() * 200)
+                }
+            })
         })
     }
 
@@ -102,7 +128,15 @@ class CGPA extends Component {
         semesters.splice(index, 1)
         this.setState({
             semesters
-        })
+        }, () => [
+            this.setState({
+                rgb: {
+                    red: Math.floor(Math.random() * 200),
+                    blue: Math.floor(Math.random() * 200),
+                    green: Math.floor(Math.random() * 200)
+                }
+            })
+        ])
     }
 
     gedit = (sem_id, sub_index, sub_grade) => {
@@ -112,6 +146,14 @@ class CGPA extends Component {
             semesterId: sem_id,
             subjectIdex: sub_index,
             updateStatus: 'g'
+        }, () => {
+            this.setState({
+                rgb: {
+                    red: Math.floor(Math.random() * 200),
+                    blue: Math.floor(Math.random() * 200),
+                    green: Math.floor(Math.random() * 200)
+                }
+            })
         })
     }
 
@@ -122,6 +164,14 @@ class CGPA extends Component {
             semesterId: sem_id,
             subjectIdex: sub_index,
             updateStatus: 'c'
+        }, () => {
+            this.setState({
+                rgb: {
+                    red: Math.floor(Math.random() * 200),
+                    blue: Math.floor(Math.random() * 200),
+                    green: Math.floor(Math.random() * 200)
+                }
+            })
         })
     }
 
@@ -129,7 +179,13 @@ class CGPA extends Component {
         this.setState({
             gradeEditValue: event.target.value
         }, () => {
-            //
+            this.setState({
+                rgb: {
+                    red: Math.floor(Math.random() * 200),
+                    blue: Math.floor(Math.random() * 200),
+                    green: Math.floor(Math.random() * 200)
+                }
+            })
         })
     }
 
@@ -207,18 +263,48 @@ class CGPA extends Component {
                 gradeEditValue: '',
                 semesterId: '',
                 subjectIdex: '',
-                updateStatus: ''
+                updateStatus: '',
+                rgb: {
+                    red: Math.floor(Math.random() * 200),
+                    blue: Math.floor(Math.random() * 200),
+                    green: Math.floor(Math.random() * 200)
+                }
             })
             //console.log(this.state.semesters)
         })
     }
 
     searchHandle = event => {
-        this.setState({ search: event.target.value })
+        this.setState({
+            search: event.target.value
+        }, () => {
+            this.setState({
+                rgb: {
+                    red: Math.random() * 200,
+                    blue: Math.random() * 200,
+                    green: Math.random() * 200
+                }
+            })
+        })
+    }
+
+    handleDeleteAllSemester = () => {
+        this.setState({
+            semesters: []
+        }, () => {
+            this.setState({
+                rgb: {
+                    red: Math.floor(Math.random() * 200),
+                    blue: Math.floor(Math.random() * 200),
+                    green: Math.floor(Math.random() * 200)
+                }
+            })
+        })
     }
 
     render() {
         const { isOpen, semesters, search } = this.state
+        let { red, green, blue } = this.state.rgb
 
         return <>
 
@@ -226,9 +312,9 @@ class CGPA extends Component {
                 <ModalBody>
                     <Form onSubmit={this.handleGradeUpdate}>
                         <InputGroup>
-                            <Input required onChange={this.updateGrade} className="rounded-0" type="text" value={this.state.gradeEditValue}></Input>
-                            <Button type="submit" className="rounded-0 btn-success">updae</Button>
-                            <Button className="rounded-0 btn-warning" onClick={() => this.setState({ gradeModalIsOpen: !this.state.gradeModalIsOpen })}>cancel</Button>
+                            <Input required onChange={this.updateGrade} className="rounded-0 border-dark" type="text" value={this.state.gradeEditValue}></Input>
+                            <Button type="submit" className="rounded-0 border-dark btn-dark">updae</Button>
+                            <Button className="rounded-0 btn-warning border-dark" onClick={() => this.setState({ gradeModalIsOpen: !this.state.gradeModalIsOpen })}>cancel</Button>
                         </InputGroup>
                     </Form>
                 </ModalBody>
@@ -241,8 +327,11 @@ class CGPA extends Component {
                     <h5>Dept. of CSE, BUBT</h5>
                     <h5>Intake: 35, Section: 01</h5>
                     <div className="d-flex justify-content-between">
-                        <Button className="rounded-0 btn-success" onClick={this.modalHandle}>Add New Semester</Button>
-                        <Input onChange={this.searchHandle} value={this.state.search} className="w-50 rounded-0 border-success" type="text" placeholder="Search Your Data"></Input>
+                        <div>
+                            <Button className="rounded-0 btn-dark" onClick={this.modalHandle}>Add New Semester</Button>
+                            <Button className="rounded-0 btn-danger ml-2" onClick={this.handleDeleteAllSemester}>Delete All Semester</Button>
+                        </div>
+                        <Input onChange={this.searchHandle} value={this.state.search} className="w-50 rounded-0 border-success" type="text" placeholder="Search Your Data by course name or grade"></Input>
                     </div>
                 </CardHeader>
             </Card>
@@ -262,6 +351,9 @@ class CGPA extends Component {
                 cedit={this.cedit}
                 gedit={this.gedit}
                 search={search}
+                red={red}
+                blue={blue}
+                green={green}
             />
 
             <Card className="rounded-0">

@@ -70,9 +70,12 @@ class UserInput extends Component {
         this.props.addNewSemester(newSemester)
         this.setState({
             semesters: this.state.semesters.concat(newSemester),
-            subjects: [],
-            subDada: { name: '', grade: '', credit: '' }
         }, () => {
+            this.setState({
+                semesterName: '',
+                subjects: [],
+                subDada: { name: '', grade: '', credit: '' }
+            })
             this.props.modalHandle()
             swal({
                 title: "Good job! " + this.state.semesterName,

@@ -7,8 +7,20 @@ import {
 
 
 
-const View = ({ semesters, deleteSemester, cedit, gedit, search }) => {
-    let [count, setCount] = useState(0)
+const View = ({ semesters, deleteSemester, cedit, gedit, search, red, blue, green }) => {
+
+    // let [red, setRed] = useState(Math.floor(Math.random() * 200))
+    // let [green, setGreen] = useState(Math.floor(Math.random() * 200))
+    // let [blue, setBlue] = useState(Math.floor(Math.random() * 200))
+
+    // setInterval(() => {
+    //     setRed(Math.floor(Math.random() * 200))
+    //     setGreen(Math.floor(Math.random() * 200))
+    //     setBlue(Math.floor(Math.random() * 000))
+    // }, 100000);
+
+
+
     let totalPoints = 0
     let totalCredits = 0
     return <>
@@ -16,11 +28,10 @@ const View = ({ semesters, deleteSemester, cedit, gedit, search }) => {
             totalPoints = parseFloat(totalPoints) + parseFloat(subject.cg_po)
             totalCredits = parseFloat(totalCredits) + parseFloat(subject.credits)
 
-            return <Card className="my-2 rounded-0">
-                <CardHeader>
-
+            return <Card className="my-2 rounded-0" style={{ backgroundColor: `rgba(${red},${green},${blue},0.2)` }}>
+                <CardHeader className="d-flex justify-content-between">
                     <h3>{subject.name}</h3>
-                    <Button onClick={() => deleteSemester(subject.id)}>Action</Button>
+                    <Button className="rounded-0 btn-light border-warning btn-sm" onClick={() => deleteSemester(subject.id)}>Delete This Semester</Button>
                 </CardHeader>
                 <CardBody>
 
@@ -46,9 +57,9 @@ const View = ({ semesters, deleteSemester, cedit, gedit, search }) => {
                             }).map((sub, i) => {
                                 return <tr>
                                     <th>{i + 1}</th>
-                                    <th>{sub.name}</th>
-                                    <th onClick={() => gedit(subject.id, i, sub.grade)}>{sub.grade}</th>
-                                    <th onClick={() => cedit(subject.id, i, sub.credit)}>{sub.credit}</th>
+                                    <th>{sub.name.toUpperCase()}</th>
+                                    <th title="Click to Quick Update" style={{ cursor: 'pointer' }} onClick={() => gedit(subject.id, i, sub.grade)}>{sub.grade}</th>
+                                    <th title="Click to Quick Update" style={{ cursor: 'pointer' }} onClick={() => cedit(subject.id, i, sub.credit)}>{sub.credit}</th>
                                     <th>
                                         {sub.grade === 'A+' ? 4 : sub.grade === "A" ? 3.75 : sub.grade === "A-" ? 3.50 : sub.grade === "B+" ? 3.25 : sub.grade === "B" ? 3.00 : sub.grade === "B-" ? 2.75 : sub.grade === "C+" ? 2.50 : sub.grade === "D" ? 2 : 0}
                                     </th>
