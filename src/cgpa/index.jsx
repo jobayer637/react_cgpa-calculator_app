@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import sid from "short-id";
 import {
-    Card, CardHeader, Button, Modal, Input, ModalBody, InputGroup, Form,
+    Card, CardHeader, Button, Modal, Input, ModalBody, InputGroup, Form, Badge,
 
 } from 'reactstrap';
 
@@ -29,7 +29,9 @@ class CGPA extends Component {
         gradeEditValue: '',
         semesterId: '',
         subjectIdex: '',
-        updateStatus: ''
+        updateStatus: '',
+
+        search: '', 
     }
 
     componentDidMount = () => {
@@ -85,16 +87,7 @@ class CGPA extends Component {
     }
 
     convertGrageToPoint = (grade) => {
-        return grade === 'A+' ? 4 :
-            grade === "A" ? 3.75 :
-                grade === "A-" ? 3.50 :
-                    grade === "B+" ? 3.25 :
-                        grade === "B" ? 3.00 :
-                            grade === "B-" ? 2.75 :
-                                grade === "C+" ? 2.50 :
-                                    grade === "C" ? 2.25 :
-                                        grade === "D" ? 2 :
-                                            grade === "F" ? 0 : 0
+        return grade === 'A+' ? 4 : grade === "A" ? 3.75 : grade === "A-" ? 3.50 : grade === "B+" ? 3.25 : grade === "B" ? 3.00 : grade === "B-" ? 2.75 : grade === "C+" ? 2.50 : grade === "C" ? 2.25 : grade === "D" ? 2 : grade === "F" ? 0 : 0
     }
 
     modalHandle = () => {
@@ -220,8 +213,12 @@ class CGPA extends Component {
         })
     }
 
+    searchHandle = event => {
+        this.setState({ search: event.target.value })
+    }
+
     render() {
-        const { isOpen, semesters } = this.state
+        const { isOpen, semesters, search } = this.state
 
         return <>
 
@@ -243,7 +240,10 @@ class CGPA extends Component {
                     <h4>CGPA Calculation</h4>
                     <h5>Dept. of CSE, BUBT</h5>
                     <h5>Intake: 35, Section: 01</h5>
-                    <Button onClick={this.modalHandle}>Add New Semester</Button>
+                    <div className="d-flex justify-content-between">
+                        <Button className="rounded-0 btn-success" onClick={this.modalHandle}>Add New Semester</Button>
+                        <Input onChange={this.searchHandle} value={this.state.search} className="w-50 rounded-0 border-success" type="text" placeholder="Search Your Data"></Input>
+                    </div>
                 </CardHeader>
             </Card>
 
@@ -261,6 +261,7 @@ class CGPA extends Component {
                 deleteSemester={this.deleteSemester}
                 cedit={this.cedit}
                 gedit={this.gedit}
+                search={search}
             />
 
             <Card className="rounded-0">

@@ -1,9 +1,14 @@
+
+import React, { useState } from 'react'
 import {
     Card, CardBody, CardHeader, CardFooter, ButtonGroup, Table, Badge, Button
 } from 'reactstrap';
 
 
-const View = ({ semesters, deleteSemester, cedit, gedit }) => {
+
+
+const View = ({ semesters, deleteSemester, cedit, gedit, search }) => {
+    let [count, setCount] = useState(0)
     let totalPoints = 0
     let totalCredits = 0
     return <>
@@ -31,22 +36,21 @@ const View = ({ semesters, deleteSemester, cedit, gedit }) => {
                         </thead>
 
                         <tbody>
-                            {subject.subject.map((sub, i) => {
+                            {subject.subject.filter(sub => {
+                                if (search === '' || null) {
+                                    return sub
+                                }
+                                if (sub.name.toString().includes(search.toString()) || sub.grade.toString().includes(search.toString())) {
+                                    return sub
+                                }
+                            }).map((sub, i) => {
                                 return <tr>
                                     <th>{i + 1}</th>
                                     <th>{sub.name}</th>
                                     <th onClick={() => gedit(subject.id, i, sub.grade)}>{sub.grade}</th>
                                     <th onClick={() => cedit(subject.id, i, sub.credit)}>{sub.credit}</th>
                                     <th>
-                                        {sub.grade === 'A+' ? 4 :
-                                            sub.grade === "A" ? 3.75 :
-                                                sub.grade === "A-" ? 3.50 :
-                                                    sub.grade === "B+" ? 3.25 :
-                                                        sub.grade === "B" ? 3.00 :
-                                                            sub.grade === "B-" ? 2.75 :
-                                                                sub.grade === "C+" ? 2.50 :
-                                                                    sub.grade === "C" ? 2.25 :
-                                                                        sub.grade === "D" ? 2 : 0}
+                                        {sub.grade === 'A+' ? 4 : sub.grade === "A" ? 3.75 : sub.grade === "A-" ? 3.50 : sub.grade === "B+" ? 3.25 : sub.grade === "B" ? 3.00 : sub.grade === "B-" ? 2.75 : sub.grade === "C+" ? 2.50 : sub.grade === "D" ? 2 : 0}
                                     </th>
                                 </tr>
                             })}
