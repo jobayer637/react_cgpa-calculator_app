@@ -9,6 +9,7 @@ import demoSubjects from '../demo/semesters'
 import View from './view'
 import UserInput from '../input/index'
 import swal from 'sweetalert';
+import semesters from './../demo/semesters';
 
 class CGPA extends Component {
 
@@ -207,7 +208,7 @@ class CGPA extends Component {
         }
 
         if (this.state.updateStatus === 'c') {
-            if (!gChaar.includes(this.state.gradeEditValue.toString())) {
+            if (!cChar.includes(this.state.gradeEditValue.toString())) {
                 swal({
                     title: "Oopps!",
                     text: "Please Enter Valid Credit Between ['4', '3', '2.5','2', '1.5', '1', '0.75']",
@@ -302,6 +303,37 @@ class CGPA extends Component {
         })
     }
 
+    deleteSubject = (semesterId, subjectId) => {
+
+        swal({
+            title: "Are you sure?",
+            text: "Once deleted, you will not be able to recover this imaginary file!",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+            .then((willDelete) => {
+                if (willDelete) {
+                    let semesters = [...this.state.semesters]
+                    let findSemester = semesters.find(semester => semester.id === semesterId)
+                    findSemester.points = parseFloat(findSemester.points) - parseFloat(this.convertGrageToPoint(findSemester.subject[subjectId].grade))
+                    findSemester.credits = parseFloat(findSemester.credits) - parseFloat(findSemester.subject[subjectId].credit)
+                    findSemester.cg_po = findSemester.cg_po - (parseFloat(findSemester.subject[subjectId].credit) * parseFloat(this.convertGrageToPoint(findSemester.subject[subjectId].grade)))
+                    findSemester.subject.splice(subjectId, 1)
+                    this.setState({
+                        semesters: semesters
+                    }, () => {
+                        swal("Poof! Your imaginary file has been deleted!", {
+                            icon: "success",
+                        });
+                    })
+                } else {
+                    swal("Your imaginary file is safe!");
+                }
+            });
+
+    }
+
     render() {
         const { isOpen, semesters, search } = this.state
         let { red, green, blue } = this.state.rgb
@@ -348,6 +380,7 @@ class CGPA extends Component {
             <View
                 semesters={semesters}
                 deleteSemester={this.deleteSemester}
+                deleteSubject={this.deleteSubject}
                 cedit={this.cedit}
                 gedit={this.gedit}
                 search={search}

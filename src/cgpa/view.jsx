@@ -7,7 +7,7 @@ import {
 
 
 
-const View = ({ semesters, deleteSemester, cedit, gedit, search, red, blue, green }) => {
+const View = ({ semesters, deleteSemester, deleteSubject, cedit, gedit, search, red, blue, green }) => {
     let totalPoints = 0
     let totalCredits = 0
     return <>
@@ -30,6 +30,7 @@ const View = ({ semesters, deleteSemester, cedit, gedit, search, red, blue, gree
                                 <th>Course Grade</th>
                                 <th>Course Credit</th>
                                 <th>Point</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
 
@@ -48,7 +49,10 @@ const View = ({ semesters, deleteSemester, cedit, gedit, search, red, blue, gree
                                     <th title="Click to Quick Update" style={{ cursor: 'pointer' }} onClick={() => gedit(subject.id, i, sub.grade)}>{sub.grade}</th>
                                     <th title="Click to Quick Update" style={{ cursor: 'pointer' }} onClick={() => cedit(subject.id, i, sub.credit)}>{sub.credit}</th>
                                     <th>
-                                        {sub.grade === 'A+' ? 4 : sub.grade === "A" ? 3.75 : sub.grade === "A-" ? 3.50 : sub.grade === "B+" ? 3.25 : sub.grade === "B" ? 3.00 : sub.grade === "B-" ? 2.75 : sub.grade === "C+" ? 2.50 : sub.grade === "D" ? 2 : 0}
+                                        {sub.grade === 'A+' ? 4 : sub.grade === "A" ? 3.75 : sub.grade === "A-" ? 3.50 : sub.grade === "B+" ? 3.25 : sub.grade === "B" ? 3.00 : sub.grade === "B-" ? 2.75 : sub.grade === "C+" ? 2.50 : sub.grade === "C" ? 2.25 : sub.grade === "D" ? 2 : 0}
+                                    </th>
+                                    <th>
+                                        <Button onClick={() => deleteSubject(subject.id, i)} className="btn-danger btn-sm rounded-0">Delete</Button>
                                     </th>
                                 </tr>
                             })}
