@@ -72,7 +72,7 @@ const View = ({ semesters, deleteSemester, deleteSubject, cedit, gedit, search, 
 
                         </div>
 
-                        <div> <Badge color="warning" className="mx-2">SGPA: {(subject.cg_po / subject.credits).toPrecision(3)}</Badge>
+                        <div> <Badge color="warning" className="mx-2">SGPA: {(subject.cg_po / subject.credits).toPrecision(3) === 'NaN' ? '' : (subject.cg_po / subject.credits).toPrecision(3)}</Badge>
                             <Badge color="warning" className="mx-2">CGPA: {(totalPoints / totalCredits).toPrecision(3)}</Badge>
                         </div>
                     </ButtonGroup>
