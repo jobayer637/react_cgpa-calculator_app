@@ -37,6 +37,13 @@ class CGPA extends Component {
             red: 200,
             green: 200,
             blue: 200
+        },
+
+        toggleAddSubForm: 'd-none',
+        subject: {
+            name: '',
+            grade: '',
+            credit: ''
         }
 
     }
@@ -124,20 +131,33 @@ class CGPA extends Component {
     }
 
     deleteSemester = (id) => {
-        let semesters = [...this.state.semesters]
-        let index = semesters.find(sem => sem.id === id)
-        semesters.splice(index, 1)
-        this.setState({
-            semesters
-        }, () => [
-            this.setState({
-                rgb: {
-                    red: Math.floor(Math.random() * 200),
-                    blue: Math.floor(Math.random() * 200),
-                    green: Math.floor(Math.random() * 200)
+        swal({
+            title: "Are you sure?",
+            text: "Once deleted, you will not be able to recover this imaginary file!",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+            .then((willDelete) => {
+                if (willDelete) {
+                    let semesters = [...this.state.semesters]
+                    let index = semesters.find(sem => sem.id === id)
+                    semesters.splice(index, 1)
+                    this.setState({
+                        semesters
+                    }, () => [
+                        this.setState({
+                            rgb: {
+                                red: Math.floor(Math.random() * 200),
+                                blue: Math.floor(Math.random() * 200),
+                                green: Math.floor(Math.random() * 200)
+                            }
+                        })
+                    ])
+                } else {
+                    swal("Your imaginary file is safe!");
                 }
-            })
-        ])
+            });
     }
 
     gedit = (sem_id, sub_index, sub_grade) => {
@@ -290,21 +310,33 @@ class CGPA extends Component {
     }
 
     handleDeleteAllSemester = () => {
-        this.setState({
-            semesters: []
-        }, () => {
-            this.setState({
-                rgb: {
-                    red: Math.floor(Math.random() * 200),
-                    blue: Math.floor(Math.random() * 200),
-                    green: Math.floor(Math.random() * 200)
-                }
-            })
+        swal({
+            title: "Are you sure?",
+            text: "Once deleted, you will not be able to recover this imaginary file!",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
         })
+            .then((willDelete) => {
+                if (willDelete) {
+                    this.setState({
+                        semesters: []
+                    }, () => {
+                        this.setState({
+                            rgb: {
+                                red: Math.floor(Math.random() * 200),
+                                blue: Math.floor(Math.random() * 200),
+                                green: Math.floor(Math.random() * 200)
+                            }
+                        })
+                    })
+                } else {
+                    swal("Your imaginary file is safe!");
+                }
+            });
     }
 
     deleteSubject = (semesterId, subjectId) => {
-
         swal({
             title: "Are you sure?",
             text: "Once deleted, you will not be able to recover this imaginary file!",
@@ -331,11 +363,94 @@ class CGPA extends Component {
                     swal("Your imaginary file is safe!");
                 }
             });
+    }
 
+    showAddSubjectForm = id => {
+        this.setState({
+            toggleAddSubForm: 'd-block',
+            semesterId: id,
+            rgb: {
+                red: Math.floor(Math.random() * 200),
+                blue: Math.floor(Math.random() * 200),
+                green: Math.floor(Math.random() * 200)
+            }
+        })
+    }
+
+    handleInputAddSubject = event => {
+        this.setState({
+            subject: {
+                ...this.state.subject,
+                [event.target.name]: event.target.value
+            },
+            rgb: {
+                red: Math.floor(Math.random() * 200),
+                blue: Math.floor(Math.random() * 200),
+                green: Math.floor(Math.random() * 200)
+            }
+        }, () => {
+            this.setState({
+                rgb: {
+                    red: Math.floor(Math.random() * 200),
+                    blue: Math.floor(Math.random() * 200),
+                    green: Math.floor(Math.random() * 200)
+                }
+            })
+        })
+    }
+
+    handleAddSubFormSubmit = event => {
+        event.preventDefault()
+        let semesters = [...this.state.semesters]
+        let findSemester = semesters.find(sem => sem.id === this.state.semesterId)
+
+        if (findSemester.subject.find(s => s.name.toUpperCase() === this.state.subject.name.toUpperCase())) {
+            swal({
+                title: "Oopps! Sorry!!",
+                text: "This Subject Has Already Been Added",
+                icon: "warning",
+                button: "Close",
+            });
+            return
+        }
+
+        findSemester.subject.push(this.state.subject)
+
+        let credits = 0
+        let cg_po = 0
+        let points = 0
+        findSemester.subject.map(sub => {
+            points = parseFloat(points) + parseFloat(this.convertGrageToPoint(sub.grade))
+            credits = parseFloat(credits) + parseFloat(sub.credit)
+            cg_po += parseFloat(sub.credit) * parseFloat(this.convertGrageToPoint(sub.grade))
+        })
+        findSemester.credits = credits
+        findSemester.points = points
+        findSemester.cg_po = cg_po
+
+        this.setState({
+            semesters: semesters
+        }, () => {
+            this.setState({
+                subject: { name: '', grade: '', credit: '' },
+                semesterId: '',
+                rgb: {
+                    red: Math.floor(Math.random() * 200),
+                    blue: Math.floor(Math.random() * 200),
+                    green: Math.floor(Math.random() * 200)
+                }
+            })
+            swal({
+                title: "Good job!",
+                text: "New Subject Successcully Added",
+                icon: "success",
+                button: "Close",
+            });
+        })
     }
 
     render() {
-        const { isOpen, semesters, search } = this.state
+        const { isOpen, semesters, search, toggleAddSubForm, semesterId, subject } = this.state
         let { red, green, blue } = this.state.rgb
 
         return <>
@@ -354,7 +469,6 @@ class CGPA extends Component {
 
             <Card>
                 <CardHeader className="text-center">
-
                     <h4>CGPA Calculation</h4>
                     <h5>Dept. of CSE, BUBT</h5>
                     <h5>Intake: 35, Section: 01</h5>
@@ -387,6 +501,12 @@ class CGPA extends Component {
                 red={red}
                 blue={blue}
                 green={green}
+                showAddSubjectForm={this.showAddSubjectForm}
+                toggleAddSubForm={toggleAddSubForm}
+                semesterId={semesterId}
+                handleInputAddSubject={this.handleInputAddSubject}
+                handleAddSubFormSubmit={this.handleAddSubFormSubmit}
+                addSubject={subject}
             />
 
             <Card className="rounded-0">

@@ -1,13 +1,16 @@
 
 import React, { useState } from 'react'
 import {
-    Card, CardBody, CardHeader, CardFooter, ButtonGroup, Table, Badge, Button
+    Card, CardBody, CardHeader, CardFooter, ButtonGroup, Table, Badge, Button,
+    Form, FormGroup, InputGroup, Input
 } from 'reactstrap';
 
+import AddSub from './add-sub'
 
 
 
-const View = ({ semesters, deleteSemester, deleteSubject, cedit, gedit, search, red, blue, green }) => {
+const View = ({ semesters, deleteSemester, deleteSubject, cedit, gedit, search, red, blue, green,
+    handleInputAddSubject, handleAddSubFormSubmit, showAddSubjectForm, toggleAddSubForm, semesterId, addSubject }) => {
     let totalPoints = 0
     let totalCredits = 0
     return <>
@@ -18,8 +21,19 @@ const View = ({ semesters, deleteSemester, deleteSubject, cedit, gedit, search, 
             return <Card className="my-2 rounded-0" style={{ backgroundColor: `rgba(${red},${green},${blue},0.2)` }}>
                 <CardHeader className="d-flex justify-content-between">
                     <h3>{subject.name}</h3>
-                    <Button className="rounded-0 btn-light border-warning btn-sm" onClick={() => deleteSemester(subject.id)}>Delete This Semester</Button>
+                    <div>
+                        <Button onClick={()=> showAddSubjectForm(subject.id)} className="rounded-0 btn-dark  btn-sm mr-2">Add Subject</Button>
+                        <Button className="rounded-0 btn-danger btn-sm" onClick={() => deleteSemester(subject.id)}>Delete This Semester</Button>
+                    </div>
                 </CardHeader>
+                {subject.id === semesterId ? <CardHeader className={toggleAddSubForm}>
+                    <AddSub
+                        handleInputAddSubject={handleInputAddSubject}
+                        handleAddSubFormSubmit={handleAddSubFormSubmit}
+                        addSubject={addSubject}
+                        showAddSubjectForm={showAddSubjectForm}
+                    />
+                </CardHeader>: ''}
                 <CardBody>
 
                     <Table bordered>
